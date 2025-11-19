@@ -62,17 +62,18 @@ This system allows:
 * cors — cross-origin access
 
 📦 3. How to Run the Project
-✔ Prerequisites
+-
+✔ Prerequisites :
+--
+✔Node.js 18+
 
-Node.js 18+
+✔MongoDB Atlas or local MongoDB
 
-MongoDB Atlas or local MongoDB
+✔npm 9+
 
-npm 9+
-
-✔ Setup
-git clone <your-repo-url>
-cd <repo-folder>
+ Setup :
+-
+git clone https://github.com/biswa18121997/coupon-management-system.git
 npm install
 
 ✔ Environment Setup
@@ -89,7 +90,7 @@ http://localhost:8086
 
 🧪 4. How to Run Tests (Optional)
 
-If you add tests later:
+If you want to use test:
 
 npm test
 
@@ -98,11 +99,15 @@ npm test
 
 🤖 5. AI Usage Note
 
-AI was used only for documentation and structure, not for writing main logic.
+AI was used only for documentation and structure largely, only in few edge cases and bad input case handling for efficient coupon matching using eligibility attributes in the best-coupon route.
+AI was used in writing the basic tests in test.js
+
 
 Prompts used:
 
+
 “Write a professional README for this project.”
+"mongo error in test.js "
 
 “Explain complex parts of my code.”
 
@@ -316,7 +321,26 @@ This adds a real loyalty system feel.
 📚 API Reference
 ➤ Create Coupon
 
-POST /create-coupon
+# POST /create-coupon
+body: `{
+  "code": "FLAT500",
+  "description": "Flat 500 off on all items",
+  "discountType": "FLAT",
+  "discountValue": 500,
+  "expiry": "2025-12-31T23:59:59Z",
+  "eligibility": {
+    "allowedUserTiers": ["ANY"],
+    "minCartValue": 0,
+    "minItemsCount": 0,
+    "requiredCategories": [],
+    "excludedCategories": [],
+    "firstOrderOnly": false,
+    "minLifetimeSpend": 0,
+    "minOrdersPlaced": 0,
+    "allowedCountries": ["ANY"]
+  },
+  "usageLimitPerUser": 5
+}`
 
 Creates and stores a new coupon.
 
@@ -325,6 +349,18 @@ Creates and stores a new coupon.
 ➤ Get Best Coupon for User + Cart
 
 POST /best-coupon
+body: `{
+  "user": {
+    "email": "test@example.com"
+  },
+  "cart": {
+    "value": 4500,
+    "itemsCount": 4,
+    "categories": ["fashion", "men"]
+  }
+}
+
+`
 
 Returns:
 
@@ -341,6 +377,12 @@ Returns:
 ➤ Apply/Use Coupon
 
 POST /use-coupon
+body: `{
+  "userEmail": "gold-user@example.com",
+  "couponCode": "PERCENT20",
+  "cartValue": 8000
+}
+`
 
 Updates:
 
@@ -357,6 +399,12 @@ tier
 ➤ Register User
 
 POST /register/user
+body : `{
+  "email": "newcustomer@example.com",
+  "password": "User@1234",
+  "country": "IN"
+}
+`
 
 Creates a new user.
 
